@@ -18,5 +18,4 @@ public interface CountryRepository extends MainRepository {
 
     Country update(Country country) throws SQLException;
 
-
 }

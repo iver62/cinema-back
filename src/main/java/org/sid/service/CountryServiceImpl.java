@@ -5,9 +5,7 @@ import org.sid.filters.QueryParameters;
 import org.sid.repository.CountryRepository;
 import org.sid.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import utils.MySort;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -58,10 +56,5 @@ public class CountryServiceImpl implements CountryService {
     @Override
     public Long countCountries(final QueryParameters queryParameters) throws SQLException {
         return countryRepository.count(queryParameters);
-    }
-
-    @Override
-    public MySort getDefaultSort() {
-        return MySort.builder().column("label").direction(Sort.Direction.ASC).build();
     }
 }

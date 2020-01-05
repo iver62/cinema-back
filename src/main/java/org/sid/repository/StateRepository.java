@@ -1,21 +1,21 @@
 package org.sid.repository;
 
 import org.sid.domain.State;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
+import org.sid.filters.QueryParameters;
 
-@Repository
-public interface StateRepository {
+import java.sql.SQLException;
+import java.util.List;
 
-    State findByName(String name);
+public interface StateRepository extends MainRepository {
 
-    @Query("SELECT s FROM State s WHERE lower(trim(s.name)) LIKE :x")
-    Page<State> findByName(@Param("x") String keyword, Pageable pageable);
+    State findById(Long id) throws SQLException;
 
-    @Query("SELECT s FROM State s WHERE s.country.id LIKE :c AND lower(trim(s.name)) LIKE :x")
-    Page<State> findByCountry(@Param("c") Long id, @Param("x") String keyword, Pageable pageable);
+    List<State> findAll(QueryParameters queryParameters) throws SQLException;
+
+    boolean findByLabel(State state) throws SQLException;
+
+    State create(State state) throws SQLException;
+
+    State update(State state) throws SQLException;
 
 }

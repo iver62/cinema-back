@@ -1,4 +1,4 @@
-package utils;
+package org.sid.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -33,14 +33,17 @@ public abstract class AbstractMapper {
 
     public Object[] getAllQueryParameters(QueryParameters queryParameters) throws JsonProcessingException, SQLException {
         PGobject jsonFilters = null;
+        PGobject jsonSort = null;
         if (queryParameters.getFilters() != null) {
             jsonFilters = new PGobject();
             jsonFilters.setType("json");
             jsonFilters.setValue(mapper.writeValueAsString(queryParameters.getFilters()));
         }
-        PGobject jsonSort = new PGobject();
-        jsonSort.setType("json");
-        jsonSort.setValue(mapper.writeValueAsString(queryParameters.getSort()));
+        if (queryParameters.getSort() != null) {
+            jsonSort = new PGobject();
+            jsonSort.setType("json");
+            jsonSort.setValue(mapper.writeValueAsString(queryParameters.getSort()));
+        }
         return new Object[]{
                 jsonFilters,
                 jsonSort,

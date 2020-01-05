@@ -36,7 +36,7 @@ public class CountryController {
     }
 
     /**
-     * url: api/country
+     * url: api/country/all
      *
      * @param principal
      * @param requestOptions
@@ -49,13 +49,18 @@ public class CountryController {
         if (requestOptions.isWithCount()) {
             countriesDTO.setCount(countryService.countCountries(requestOptions.getQueryParameters()));
         }
-        if (requestOptions.getQueryParameters() != null && requestOptions.getQueryParameters().getSort() == null) {
-            requestOptions.getQueryParameters().setSort(countryService.getDefaultSort());
-        }
         countriesDTO.setCountries(countryService.getCountries(requestOptions.getQueryParameters()));
         return countriesDTO;
     }
 
+    /**
+     * url: api/country/search
+     *
+     * @param principal
+     * @param country
+     * @return
+     * @throws SQLException
+     */
     @PostMapping("search")
     public boolean getCountryByLabel(final Principal principal, @RequestBody @Valid Country country) throws SQLException {
         return countryService.getCountryByLabel(country);

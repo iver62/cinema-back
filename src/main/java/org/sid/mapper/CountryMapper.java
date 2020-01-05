@@ -18,7 +18,7 @@ public class CountryMapper extends AbstractMapper implements RowMapper<Country> 
 
     private static final String GET_ONE_QUERY = "SELECT * FROM public.get_country(?);";
     private static final String GET_ALL_QUERY = "SELECT * FROM public.get_countries(?,?,?,?);";
-    private static final String SEARCH_BY_LABEL_QUERY = "SELECT * FROM public.search_countries_by_label(?,?);";
+    private static final String SEARCH_BY_LABEL_QUERY = "SELECT * FROM public.search_country_by_label(?,?);";
     private static final String CREATE_QUERY = "SELECT * FROM public.create_country(?,?,?,?);";
     private static final String UPDATE_QUERY = "SELECT * FROM public.update_country(?,?,?,?);";
     private static final String DELETE_QUERY = "SELECT * FROM public.delete_country(?);";

@@ -6,7 +6,7 @@ import org.sid.filters.QueryParameters;
 import java.sql.SQLException;
 import java.util.List;
 
-public interface CountryService extends MainService {
+public interface CountryService {
 
     Country getCountry(Long id) throws SQLException;
 

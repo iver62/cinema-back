@@ -1,164 +1,108 @@
-//package org.sid.controller;
-//
-//import org.modelmapper.ModelMapper;
-//import org.sid.service.StateService;
-//import org.sid.domain.dto.StateDTO;
-//import org.sid.domain.entities.State;
-//import org.sid.utils.Utils;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.data.domain.PageRequest;
-//import org.springframework.data.domain.Sort;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.*;
-//
-//import javax.validation.Valid;
-//
-//@RestController
-//@RequestMapping(value = "api/state")
-//public class StateController {
-//
-//    private StateService stateService;
-//    private static final String SERVER_ERROR = "Erreur serveur";
-//
-//    @Autowired
-//    public StateController(StateService stateService) {
-//        this.stateService = stateService;
-//    }
-//
-//    /**
-//     * url: api/state/:id
-//     *
-//     * @param id
-//     * @return
-//     */
-//    @GetMapping(value = "{id}")
-//    public ResponseEntity<Object> getState(@PathVariable final Long id) {
-//        HttpStatus httpStatus;
-//        Object entity;
-//
-//        try {
-//            entity = stateService.getState(id);
-//            httpStatus = entity != null ? HttpStatus.OK : HttpStatus.NO_CONTENT;
-//        } catch (Exception e) {
-//            entity = SERVER_ERROR;
-//            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-//        }
-//
-//        return ResponseEntity.status(httpStatus).body(entity);
-//    }
-//
-//    /**
-//     * url: api/state
-//     *
-//     * @param keyword
-//     * @param page
-//     * @param size
-//     * @param column
-//     * @param direction
-//     * @return
-//     */
-//    @GetMapping()
-//    public ResponseEntity<Object> getStates(
-//            @RequestParam(value = "keyword", defaultValue = "") final String keyword,
-//            @RequestParam(value = "page", defaultValue = "0") final int page,
-//            @RequestParam(value = "size", defaultValue = "20") final int size,
-//            @RequestParam(value = "property", defaultValue = "name") final String column,
-//            @RequestParam(value = "direction", defaultValue = "asc") final String direction
-//    ) {
-//        HttpStatus httpStatus;
-//        Object entity;
-//
-//        try {
-//            int newSize;
-//            Sort.Direction dir = direction.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
-//            newSize = size == 0 ? Integer.MAX_VALUE : size;
-//            entity = stateService.getStates("%" + keyword + "%", PageRequest.of(page, newSize, new Sort(dir, column)));
-//            httpStatus = entity != null ? HttpStatus.OK : HttpStatus.NO_CONTENT;
-//        } catch (Exception e) {
-//            entity = SERVER_ERROR;
-//            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-//        }
-//
-//        return ResponseEntity.status(httpStatus).body(entity);
-//    }
-//
-//    /**
-//     * url: api/state
-//     *
-//     * @param stateDTO
-//     * @return
-//     */
-//    @PostMapping()
-//    public ResponseEntity<Object> createState(@Valid @RequestBody final StateDTO stateDTO) {
-//        HttpStatus httpStatus;
-//        Object entity;
-//
-//        try {
-//            if (stateService.getStateByName(Utils.capitalizeFirstLetter(stateDTO.getName())) != null) {
-//                entity = "Cette région existe déjà";
-//                httpStatus = HttpStatus.CONFLICT;
-//            } else {
-//                entity = stateService.createState(convertToEntity(stateDTO));
-//                httpStatus = HttpStatus.OK;
-//            }
-//        } catch (Exception e) {
-//            entity = SERVER_ERROR;
-//            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-//        }
-//
-//        return ResponseEntity.status(httpStatus).body(entity);
-//    }
-//
-//    /**
-//     * url: api/state/:id
-//     *
-//     * @param id
-//     * @param state
-//     * @return
-//     */
-//    @PutMapping(value = "{id}")
-//    public ResponseEntity<Object> updateState(@PathVariable final Long id, @Valid @RequestBody final State state) {
-//        HttpStatus httpStatus;
-//        Object entity;
-//
-//        try {
-//            if (stateService.getStateByName(Utils.capitalizeFirstLetter(state.getName())) != null) {
-//                entity = "Cette région existe déjà";
-//                httpStatus = HttpStatus.CONFLICT;
-//            } else {
-//                entity = stateService.updateState(id, state);
-//                httpStatus = HttpStatus.OK;
-//            }
-//        } catch (Exception e) {
-//            entity = SERVER_ERROR;
-//            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-//        }
-//
-//        return ResponseEntity.status(httpStatus).body(entity);
-//    }
-//
-//    /**
-//     * url: api/state/:id
-//     *
-//     * @param id
-//     * @return
-//     */
-//    @DeleteMapping(value = "{id}")
-//    public ResponseEntity<Object> deleteState(@PathVariable final Long id) {
-//        HttpStatus httpStatus;
-//        Object entity;
-//
-//        try {
-//            stateService.deleteState(id);
-//            entity = "Région supprimée avec succés";
-//            httpStatus = HttpStatus.OK;
-//        } catch (Exception e) {
-//            entity = "Ressource introuvable";
-//            httpStatus = HttpStatus.NOT_FOUND;
-//        }
-//
-//        return ResponseEntity.status(httpStatus).body(entity);
-//    }
-//
-//}
+package org.sid.controller;
+
+import org.sid.domain.State;
+import org.sid.domain.dto.StatesDTO;
+import org.sid.filters.RequestOptions;
+import org.sid.service.StateService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.security.Principal;
+import java.sql.SQLException;
+
+@RestController
+@RequestMapping(value = "api/state")
+public class StateController {
+
+    private StateService stateService;
+
+    @Autowired
+    public StateController(StateService stateService) {
+        this.stateService = stateService;
+    }
+
+    /**
+     * url: api/state/:id
+     *
+     * @param principal
+     * @param id
+     * @return
+     * @throws SQLException
+     */
+    @GetMapping("{id}")
+    public State getState(final Principal principal, @PathVariable final Long id) throws SQLException {
+        return stateService.getState(id);
+    }
+
+    /**
+     * url: api/state/all
+     *
+     * @param principal
+     * @param requestOptions
+     * @return
+     * @throws SQLException
+     */
+    @PostMapping("/all")
+    public StatesDTO getStates(final Principal principal, @RequestBody final RequestOptions requestOptions) throws SQLException {
+        StatesDTO statesDTO = new StatesDTO();
+        if (requestOptions.isWithCount()) {
+            statesDTO.setCount(stateService.countStates(requestOptions.getQueryParameters()));
+        }
+        statesDTO.setStates(stateService.getStates(requestOptions.getQueryParameters()));
+        return statesDTO;
+    }
+
+    /**
+     * url: api/state/search
+     *
+     * @param principal
+     * @param state
+     * @return
+     * @throws SQLException
+     */
+    @PostMapping("search")
+    public boolean getStateByLabel(final Principal principal, @RequestBody @Valid State state) throws SQLException {
+        return stateService.getStateByLabel(state);
+    }
+
+    /**
+     * url: api/state
+     *
+     * @param principal
+     * @param state
+     * @return
+     * @throws SQLException
+     */
+    @PostMapping
+    public State createState(final Principal principal, @Valid @RequestBody final State state) throws SQLException {
+        return stateService.createState(state);
+    }
+
+    /**
+     * url: api/state
+     *
+     * @param principal
+     * @param state
+     * @return
+     * @throws SQLException
+     */
+    @PutMapping()
+    public State updateState(final Principal principal, @Valid @RequestBody final State state) throws SQLException {
+        return stateService.updateState(state);
+    }
+
+    /**
+     * url: api/country/:id
+     *
+     * @param principal
+     * @param id
+     * @return
+     * @throws SQLException
+     */
+    @DeleteMapping("{id}")
+    public Long deleteState(final Principal principal, @PathVariable final Long id) throws SQLException {
+        return stateService.deleteState(id);
+    }
+
+}
