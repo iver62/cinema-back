@@ -1,24 +1,22 @@
 package org.sid.repository;
 
 import org.sid.domain.City;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.sid.filters.QueryParameters;
 import org.springframework.stereotype.Repository;
 
+import java.sql.SQLException;
+import java.util.List;
+
 @Repository
-public interface CityRepository {
+public interface CityRepository extends MainRepository {
 
-    City findByName(String name);
+    City findById(Long id) throws SQLException;
 
-    @Query("SELECT c FROM City c WHERE lower(trim(c.name)) LIKE :x")
-    Page<City> findByName(@Param("x") String keyword, Pageable pageable);
+    List<City> findAll(QueryParameters queryParameters) throws SQLException;
 
-    @Query("SELECT c FROM City c WHERE c.state.id LIKE :s AND lower(trim(c.name)) LIKE :x")
-    Page<City> findByState(@Param("s") Long id, @Param("x") String keyword, Pageable pageable);
+    boolean findByLabel(City city) throws SQLException;
 
-    @Query("SELECT c FROM City c WHERE c.state.id LIKE :s AND lower(trim(c.name)) LIKE :x")
-    Page<City> findByCountry(@Param("s") Long id, @Param("x") String keyword, Pageable pageable);
+    City create(City city) throws SQLException;
 
+    City update(City city) throws SQLException;
 }

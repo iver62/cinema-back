@@ -2,6 +2,13 @@ package org.sid.utils;
 
 public enum ClientMessages {
 
+    CITY_FIND_BY_ID("Erreur lors de la récupération de la ville"),
+    CITY_FIND_ALL("Erreur lors de la récupération de la liste des villes"),
+    CITY_SEARCH_BY_LABEL("Erreur lors de la recherche des villes"),
+    CITY_CREATE("Erreur lors de la création de la ville"),
+    CITY_UPDATE("Erreur lors de la modification de la ville"),
+    CITY_DELETE_BY_ID("Erreur lors de la suppression de la ville"),
+    CITY_COUNT("Erreur lors du comptage des villes"),
     COUNTRY_FIND_BY_ID("Erreur lors de la récupération du pays"),
     COUNTRY_FIND_ALL("Erreur lors de la récupération de la liste des pays"),
     COUNTRY_SEARCH_BY_LABEL("Erreur lors de la recherche des pays"),

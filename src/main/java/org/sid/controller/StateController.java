@@ -87,7 +87,7 @@ public class StateController {
      * @return
      * @throws SQLException
      */
-    @PutMapping()
+    @PutMapping
     public State updateState(final Principal principal, @Valid @RequestBody final State state) throws SQLException {
         return stateService.updateState(state);
     }

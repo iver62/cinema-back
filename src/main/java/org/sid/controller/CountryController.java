@@ -87,7 +87,7 @@ public class CountryController {
      * @return
      * @throws SQLException
      */
-    @PutMapping()
+    @PutMapping
     public Country updateCountry(final Principal principal, @Valid @RequestBody final Country country) throws SQLException {
         return countryService.updateCountry(country);
     }
